@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cj.dao.UserDAO">
+    <resultMap type="user" id="userMap">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="email" property="email"></result>
+        <result column="pwd" property="pwd"></result>
+    </resultMap>
+    <select id="queryAll" resultMap="userMap">
+        select * from t_user
+    </select>
+    <insert id="Add" parameterType="user">
+        insert into t_user (name,email,pwd) values (#{name},#{email},#{pwd})
+    </insert>
+    <select id="queryByPagerAndCriteria" resultMap="userMap">
+        select * from t_user where 1 = 1
+        <if test="user.name != null and user.name != ''">
+            and name like concat('%', #{user.name}, '%')
+        </if>
+        <if test="user.email != null and user.email != ''">
+            and email like concat('%', #{user.email}, '%')
+        </if>
+        limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+    <select id="countByCriteria" resultType="int" parameterType="user">
+        select count(id) from t_user where 1 = 1
+        <if test="name != null and name != ''">
+            and name like concat('%', #{name}, '%')
+        </if>
+        <if test="email != null and email != ''">
+            and email like concat('%', #{email}, '%')
+        </if>
+    </select>
+</mapper>
